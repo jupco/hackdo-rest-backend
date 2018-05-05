@@ -27,6 +27,7 @@ object Main extends App with SystemRoutes {
 
   sys.addShutdownHook {
     Await.ready(system.terminate, 10.seconds)
+    ()
   }
 
 }

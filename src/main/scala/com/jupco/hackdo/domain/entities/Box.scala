@@ -10,6 +10,15 @@ case class Box(length: Dimension, width: Dimension, height: Dimension, weight: K
 
 object Box {
   type Kilos = Double
+
+  def apply(length: Double, width: Double, height: Double, weight: Double): Either[ServiceError, Box] = {
+    import cats.syntax.apply._
+    import cats.instances.either._
+    (Dimension(length).toEither, Dimension(width).toEither, Dimension(height).toEither).mapN {
+      (l: Dimension, w: Dimension, h: Dimension) =>
+        new Box(l, w, h, weight)
+    }
+  }
 }
 
 case class Dimension(value: Double) {
@@ -25,4 +34,10 @@ object Dimension {
 case class Area(value: Double) {
   def *(dimension: Dimension): Volume = Volume(value * dimension.value)
 }
-case class Volume(value: Double)
+case class Volume(value: Double) {
+  def ==(otherVolume: Volume) = value == otherVolume.value
+  def >(otherVolume: Volume)  = value > otherVolume.value
+  def <=(otherVolume: Volume) = ! >(otherVolume)
+  def <(otherVolume: Volume)  = ! >(otherVolume) && ! ==(otherVolume)
+  def >=(otherVolume: Volume) = ! <(otherVolume)
+}

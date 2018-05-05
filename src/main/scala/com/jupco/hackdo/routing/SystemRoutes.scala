@@ -1,16 +1,24 @@
 package com.jupco.hackdo.routing
 
-import akka.http.scaladsl.model.{ ContentTypes, HttpEntity }
-import akka.http.scaladsl.server.Directives.{ complete, get, path }
+import java.time.ZonedDateTime
+
+import akka.http.scaladsl.model.StatusCodes.OK
+import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import io.circe.generic.auto._
+import io.circe.java8.time._
 
-trait SystemRoutes {
+trait SystemRoutes extends PackagesRoutes {
 
-  def routes: Route = healthRoute
+  protected def now = ZonedDateTime.now
+
+  def routes: Route = healthRoute ~ packagesRoutes
 
   def healthRoute: Route = path("health") {
     get {
-      complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "healthy"))
+      complete(OK -> HealthResponse(now))
     }
   }
+
+  case class HealthResponse(time: ZonedDateTime)
 }

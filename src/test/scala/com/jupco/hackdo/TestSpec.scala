@@ -1,4 +1,4 @@
-package com.jupco.hackdo.routing.com.jupco.hackdo
+package com.jupco.hackdo
 
 import org.scalatest.{ AsyncWordSpec, Matchers }
 

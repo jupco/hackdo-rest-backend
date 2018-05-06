@@ -16,7 +16,7 @@ object Address {
       firstField: String,
       secondarySegmentType: String,
       secondField: String
-  ): Either[List[ServiceError], Address] = {
+  ): Either[ServiceError, Address] = {
     import cats.syntax.apply._
     import cats.instances.either._
     (SegmentType(primarySegmentType).toEither, SegmentType(secondarySegmentType).toEither)
@@ -29,9 +29,9 @@ case object Street extends SegmentType
 case object Avenue extends SegmentType
 
 object SegmentType {
-  def apply(string: String): Validated[List[ServiceError], SegmentType] = string match {
+  def apply(string: String): Validated[ServiceError, SegmentType] = string match {
     case "Street" | "St" => Street.valid
     case "Avenue" | "Av" => Avenue.valid
-    case v               => List(InvalidAddressSegmentType(message = s"$v is not a valid value for the address segment type")).invalid
+    case v               => InvalidAddressSegmentType(message = s"$v is not a valid value for the address segment type").invalid
   }
 }

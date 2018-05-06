@@ -1,6 +1,6 @@
 package com.jupco.hackdo.routing.dtos
 
-case class PackageDTO(id: String, owner: UserDTO, box: BoxDTO, status: String)
+case class PackageDTO(owner: UserDTO, box: BoxDTO, status: String)
 
 case class UserDTO(id: String, name: String, lastName: String, address: AddressDTO, telephone: String)
 

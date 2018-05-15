@@ -21,7 +21,7 @@ class PackageServiceImplTests extends TestSpec {
       val p = new PackageServiceImpl(mockedEnv)
       val r = p.createPackage(package1)
       r.fold(
-          _.message shouldBe "the user u1 doesn't exist",
+          _.message shouldBe "the user 'u1' doesn't exist",
           _ => fail
         )
         .runAsync
@@ -51,7 +51,7 @@ class PackageServiceImplTests extends TestSpec {
       val p = new PackageServiceImpl(mockedEnv)
       val r = p.getPackagesByUserId(package1.owner.id)
       r.fold(
-          _.message shouldBe "the user u1 doesn't exist",
+          _.message shouldBe "the user 'u1' doesn't exist",
           _ => fail
         )
         .runAsync
@@ -71,7 +71,7 @@ class PackageServiceImplTests extends TestSpec {
       val p = new PackageServiceImpl(mockedEnv)
       val r = p.getPackageByPackageId("0000")
       r.fold(
-          _.message shouldBe "the package with id 0000 wasn't found in the system",
+          _.message shouldBe "the package with id '0000' wasn't found in the system",
           _ => fail
         )
         .runAsync
@@ -111,7 +111,7 @@ class PackageServiceImplTests extends TestSpec {
       val p = new PackageServiceImpl(mockedEnv)
       val r = p.updateBox("000", bigBox.copy(length = new Dimension(1)))
       r.fold(
-          _.message shouldBe "the package with id 000 wasn't found in the system",
+          _.message shouldBe "the package with id '000' wasn't found in the system",
           _ => fail
         )
         .runAsync
@@ -141,7 +141,7 @@ class PackageServiceImplTests extends TestSpec {
       val p = new PackageServiceImpl(mockedEnv)
       val r = p.updateStatus("000", Review)
       r.fold(
-          _.message shouldBe "the package with id 000 wasn't found in the system",
+          _.message shouldBe "the package with id '000' wasn't found in the system",
           _ => fail
         )
         .runAsync

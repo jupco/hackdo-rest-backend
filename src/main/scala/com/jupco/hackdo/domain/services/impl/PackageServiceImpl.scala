@@ -17,7 +17,7 @@ class PackageServiceImpl(env: PackagesEnvironment[Package, User, PackageStatus, 
     for {
       _ <- EitherT.fromOptionF(
         env.usersClient.getUserById(p.owner.id),
-        InvalidUserId(message = s"the user ${p.owner.id} doesn't exist")
+        InvalidUserId(message = s"the user '${p.owner.id}' doesn't exist")
       )
       _            <- EitherT.fromEither[Task](validateBoxSize(p.box).toEither)
       packageSaved <- EitherT.right(env.packagesRepository.storeOrUpdate(p))
@@ -29,7 +29,7 @@ class PackageServiceImpl(env: PackagesEnvironment[Package, User, PackageStatus, 
     for {
       _ <- EitherT.fromOptionF(
         env.usersClient.getUserById(u),
-        InvalidUserId(message = s"the user ${u} doesn't exist")
+        InvalidUserId(message = s"the user '$u' doesn't exist")
       )
       pks <- EitherT.right(env.packagesRepository.getByUserId(u))
     } yield pks
@@ -39,23 +39,23 @@ class PackageServiceImpl(env: PackagesEnvironment[Package, User, PackageStatus, 
     logger.info(s"Retrieving a package by its id: $id")
     EitherT.fromOptionF[Task, ServiceError, Package](
       env.packagesRepository.getByPackageId(id),
-      PackageNotFound(message = s"the package with id $id wasn't found in the system")
+      PackageNotFound(message = s"the package with id '$id' wasn't found in the system")
     )
   }
 
   override def getPackagesByStatus(status: PackageStatus): ServiceResponse[List[Package]] = {
-    logger.info(s"Retrieving packages by their status: ${status.toString}")
+    logger.info(s"Retrieving packages by their status: '${status.toString}'")
     EitherT
       .right[ServiceError](env.packagesRepository.getByStatus(status))
       .leftMap(_ => PackageNotFound(message = "packages could not be found"))
   }
 
   override def updateBox(packageId: String, b: Box): ServiceResponse[Package] = {
-    logger.info(s"Updating box for a package with id $packageId, assigning new box $b")
+    logger.info(s"Updating box for a package with id '$packageId', assigning new box '$b'")
     for {
       p <- EitherT.fromOptionF(
         env.packagesRepository.getByPackageId(packageId),
-        PackageNotFound(message = s"the package with id $packageId wasn't found in the system")
+        PackageNotFound(message = s"the package with id '$packageId' wasn't found in the system")
       )
       np = p.copy(box = b)
       _  <- EitherT.fromEither[Task](validateBoxSize(b).toEither)
@@ -64,11 +64,11 @@ class PackageServiceImpl(env: PackagesEnvironment[Package, User, PackageStatus, 
   }
 
   override def updateStatus(packageId: String, status: PackageStatus): ServiceResponse[Package] = {
-    logger.info(s"Updating status for a package with id $packageId, assigning new status $status")
+    logger.info(s"Updating status for a package with id '$packageId', assigning new status $status")
     for {
       p <- EitherT.fromOptionF(
         env.packagesRepository.getByPackageId(packageId),
-        PackageNotFound(message = s"the package with id $packageId wasn't found in the system")
+        PackageNotFound(message = s"the package with id '$packageId' wasn't found in the system")
       )
       np = p.copy(status = status)
       up <- EitherT.right(env.packagesRepository.storeOrUpdate(np))

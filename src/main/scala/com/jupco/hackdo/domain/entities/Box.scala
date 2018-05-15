@@ -28,7 +28,7 @@ case class Dimension(value: Double) {
 object Dimension {
   def apply(value: Double): Validated[ServiceError, Dimension] =
     if (value > 0) Valid(new Dimension(value))
-    else Invalid(InvalidBoxDimension(message = s"$value is not a valid value for a box dimension"))
+    else Invalid(InvalidBoxDimension(message = s"'$value' is not a valid value for a box dimension"))
 }
 
 case class Area(value: Double) {

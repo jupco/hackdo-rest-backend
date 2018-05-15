@@ -15,6 +15,6 @@ object PackageStatus {
     case "received"  => Received.valid
     case "delivered" => Delivered.valid
     case "review"    => Review.valid
-    case v           => InvalidPackageStatus(message = s"$v is not a valid package status").invalid
+    case v           => InvalidPackageStatus(message = s"'$v' is not a valid package status").invalid
   }
 }

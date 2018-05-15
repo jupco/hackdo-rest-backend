@@ -29,9 +29,9 @@ case object Street extends SegmentType
 case object Avenue extends SegmentType
 
 object SegmentType {
-  def apply(string: String): Validated[ServiceError, SegmentType] = string match {
-    case "Street" | "St" => Street.valid
-    case "Avenue" | "Av" => Avenue.valid
-    case v               => InvalidAddressSegmentType(message = s"$v is not a valid value for the address segment type").invalid
+  def apply(string: String): Validated[ServiceError, SegmentType] = string.toLowerCase.trim match {
+    case "street" | "st" => Street.valid
+    case "avenue" | "av" => Avenue.valid
+    case v               => InvalidAddressSegmentType(message = s"'$v' is not a valid value for the address segment type").invalid
   }
 }

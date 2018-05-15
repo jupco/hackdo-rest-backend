@@ -19,11 +19,23 @@ class EntitiesTests extends TestSpec {
       }
     }
 
+    "return a valid Address with lowercase name" in {
+      val address = Address("street", "1", "avenue", "14")
+      address match {
+        case Right(add) =>
+          add.primarySegmentType shouldBe Street
+          add.firstField shouldBe "1"
+          add.secondarySegmentType shouldBe Avenue
+          add.secondField shouldBe "14"
+        case Left(_) => fail()
+      }
+    }
+
     "return an invalid Address" in {
       val address = Address("Cll", "1", "Avenue", "14")
       address match {
         case Right(_) => fail()
-        case Left(x)  => x.map(_.message) shouldBe List("Cll is not a valid value for the address segment type")
+        case Left(x)  => x.message shouldBe "'cll' is not a valid value for the address segment type"
       }
     }
   }
@@ -47,7 +59,7 @@ class EntitiesTests extends TestSpec {
       val box = Box(-1, 2, 3, 4)
       box match {
         case Right(_) => fail()
-        case Left(x)  => x.message shouldBe "-1.0 is not a valid value for a box dimension"
+        case Left(x)  => x.message shouldBe "'-1.0' is not a valid value for a box dimension"
       }
     }
   }
@@ -105,7 +117,7 @@ class EntitiesTests extends TestSpec {
       val status = PackageStatus("status")
       status match {
         case Valid(_)   => fail
-        case Invalid(s) => s.message shouldBe "status is not a valid package status"
+        case Invalid(s) => s.message shouldBe "'status' is not a valid package status"
       }
     }
   }

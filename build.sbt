@@ -21,7 +21,8 @@ libraryDependencies ++= {
     "io.monix"                   %% "monix"             % monixVersion,
     "com.typesafe.scala-logging" %% "scala-logging"     % "3.9.0",
     "com.github.pureconfig"      %% "pureconfig"        % "0.9.1",
-    "org.slf4j"                  % "slf4j-simple"       % "1.6.2"
+    "org.slf4j"                  % "slf4j-simple"       % "1.6.2",
+    "ch.megard"                  %% "akka-http-cors"    % "0.3.0"
   )
 }
 

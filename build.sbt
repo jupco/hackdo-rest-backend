@@ -4,14 +4,14 @@ scalaVersion := "2.12.6"
 
 libraryDependencies ++= {
   val akkaHttpVersion = "10.1.1"
-  val circeVersion    = "0.10.0-M1"
+  val circeVersion    = "0.9.3"
   val monixVersion    = "3.0.0-RC1"
   Seq(
     "com.typesafe.akka"          %% "akka-http"         % akkaHttpVersion,
     "com.typesafe.akka"          %% "akka-http-testkit" % akkaHttpVersion % Test,
     "com.typesafe.akka"          %% "akka-stream"       % "2.5.11",
     "org.scalatest"              %% "scalatest"         % "3.0.5" % "test",
-    "org.typelevel"              %% "cats-core"         % "1.1.0",
+    "org.typelevel"              %% "cats-core"         % "1.0.1",
     "io.circe"                   %% "circe-core"        % circeVersion,
     "io.circe"                   %% "circe-core"        % circeVersion,
     "io.circe"                   %% "circe-generic"     % circeVersion,

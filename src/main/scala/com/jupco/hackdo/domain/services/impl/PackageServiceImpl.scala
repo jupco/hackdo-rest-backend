@@ -12,15 +12,17 @@ import monix.eval.Task
 class PackageServiceImpl(env: PackagesEnvironment[Package, User, PackageStatus, Task, List])
     extends PackageService[Package, Box, PackageStatus, ServiceResponse, List] with LazyLogging {
 
-  override def createPackage(p: Package): ServiceResponse[Package] = {
-    logger.info(s"Creating a new Package with id ${p.id}")
+  override def createPackage(pid: String, ownerId: String, b: Box, status: String): ServiceResponse[Package] = {
+    logger.info(s"Creating a new Package with id $pid")
     for {
-      _ <- EitherT.fromOptionF(
-        env.usersClient.getUserById(p.owner.id),
-        InvalidUserId(message = s"the user '${p.owner.id}' doesn't exist")
+      u <- EitherT.fromOptionF(
+        env.usersClient.getUserById(ownerId),
+        InvalidUserId(message = s"the user '$ownerId' doesn't exist")
       )
-      _            <- EitherT.fromEither[Task](validateBoxSize(p.box).toEither)
-      packageSaved <- EitherT.right(env.packagesRepository.storeOrUpdate(p))
+      _  <- EitherT.fromEither[Task](validateBoxSize(b).toEither)
+      st <- EitherT.fromEither[Task](PackageStatus(status).toEither)
+      pck = Package(id = pid, owner = u, box = b, status = st)
+      packageSaved <- EitherT.right(env.packagesRepository.storeOrUpdate(pck))
     } yield packageSaved
   }
 
@@ -75,11 +77,15 @@ class PackageServiceImpl(env: PackagesEnvironment[Package, User, PackageStatus, 
     } yield up
   }
 
-  override def deletePackage(p: Package): ServiceResponse[Package] = {
-    logger.info(s"Deleting the package with id ${p.id}")
-    EitherT
-      .right[ServiceError](env.packagesRepository.delete(p))
-      .leftMap(_ => PackageNotFound(message = "packages could not be found"))
+  override def deletePackage(id: String): ServiceResponse[Package] = {
+    logger.info(s"Deleting the package with id $id")
+    for {
+      p <- EitherT.fromOptionF(
+        env.packagesRepository.getByPackageId(id),
+        PackageNotFound(message = s"the package with id '$id' wasn't found in the system")
+      )
+      d <- EitherT.right(env.packagesRepository.delete(p))
+    } yield d
   }
 
   private def validateBoxSize(box: Box): Validated[ServiceError, Box] =

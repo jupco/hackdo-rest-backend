@@ -19,7 +19,7 @@ class PackageServiceImplTests extends TestSpec {
 
     "not create a Package" in {
       val p = new PackageServiceImpl(mockedEnv)
-      val r = p.createPackage(package1)
+      val r = p.createPackage("", package1.owner.id, package1.box, "review")
       r.fold(
           _.message shouldBe "the user 'u1' doesn't exist",
           _ => fail
@@ -29,7 +29,7 @@ class PackageServiceImplTests extends TestSpec {
 
     "create a Package" in {
       val p = new PackageServiceImpl(mockedEnv)
-      val r = p.createPackage(package3)
+      val r = p.createPackage(package3.id, package3.owner.id, package3.box, "transit")
       r.fold(
           _ => fail,
           _ shouldBe package3
@@ -149,7 +149,7 @@ class PackageServiceImplTests extends TestSpec {
 
     "deletePackage" in {
       val p = new PackageServiceImpl(mockedEnv)
-      val r = p.deletePackage(package3)
+      val r = p.deletePackage(package3.id)
       r.fold(
           _ => fail,
           _ shouldBe package3

@@ -13,6 +13,7 @@ import com.jupco.hackdo.infrastructure.clients.impl.MockedUsersClient
 import com.jupco.hackdo.infrastructure.configuration.{ ConfigApp, DefaultConfig }
 import com.jupco.hackdo.routing.SystemRoutes
 import monix.eval.Task
+import monix.execution.Scheduler
 
 import scala.concurrent.{ Await, ExecutionContextExecutor }
 import scala.concurrent.duration._
@@ -23,6 +24,7 @@ object Main extends App with SystemRoutes {
   implicit val system: ActorSystem                        = ActorSystem("inventory")
   implicit val materializer: ActorMaterializer            = ActorMaterializer()
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
+  val sc: Scheduler                                       = Scheduler.io()
 
   val environment = new PackagesEnvironment[Package, User, PackageStatus, Task, List] {
 
